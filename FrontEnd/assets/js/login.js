@@ -66,7 +66,7 @@ if (logoutBtn) {
     event.preventDefault();
     localStorage.removeItem("token");
     localStorage.removeItem("userId");
-    window.location.href = "login2.html";
+    window.location.href = "login.html";
   });
 }
 
