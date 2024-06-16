@@ -22,13 +22,14 @@
     <meta name="description" content="" />
     <link rel="stylesheet" href="assets/stylev3.css" />
   </head>
-  <div class="edit-mod">
-    <div class="edit-title">
-      <i class="fa-regular fa-pen-to-square"></i>
-      <p>Mode edition</p>
-    </div>
-  </div>
+  
   <body>
+    <div class="edit-mod" style="display: none;">
+      <div class="edit-title">
+        <i class="fa-regular fa-pen-to-square"></i>
+        <p>Mode edition</p>
+      </div>
+    </div>
     <div id="modal" style="display: none;">
       <div class="modal-back"></div>
       <div class="modal-container">
@@ -52,6 +53,7 @@
           <h2>Ajout photo</h2>
           <form action="" id="submit-modal" class="form-modal" method="post">
             <div class="add-image">
+              <div id="nofile"></div>
               <label for="file" class="label-file">
                 <div class="before-selected">
                   <i class="fa-regular fa-image" style="color: #b9c5cc"></i>
@@ -71,6 +73,7 @@
             </div>
             <div class="add-modal">
               <label for="title-modal">Titre</label>
+              <div id="notitle"></div>
               <input type="text" id="title-modal" />
             </div>
             <div class="add-modal">
@@ -96,8 +99,8 @@
       <h1>Sophie Bluel <span>Architecte d'inteérieur</span></h1>
       <nav>
         <ul>
-          <li><a href="#">projets</a></li>
-          <li><a href="#">contact</a></li>
+          <li><a href="#portfolio">projets</a></li>
+          <li><a href="#contact">contact</a></li>
           <li><a href="login.html" id="login-btn">Login</a></li>
           <li><a href="INDEX.html" id="logout-btn" style="display: none;">Logout</a></li>
           </li>

@@ -6,7 +6,7 @@ const objetButton = document.querySelector(".btn.objet");
 const appartementsButton = document.getElementById("Appartements");
 const hrButton = document.getElementById("H&r");
 const gallery = document.querySelector(".gallery");
-const modifierMod = document.querySelector(".modification");
+const btnmodif = document.querySelector(".modification");
 const backMod = document.querySelector(".modal-back");
 const xMark = document.querySelectorAll(".fa-xmark");
 const imageModal = document.getElementById("file");
@@ -16,13 +16,13 @@ const displayModal = document.querySelector(".display-works-modal");
 const loginBtn = document.getElementById("login-btn");
 const logoutBtn = document.getElementById("logout-btn");
 const modal = document.getElementById("modal");
-const blackBar = document.querySelector(".edit-mod");
+const editmod = document.querySelector(".edit-mod");
 
 async function fetchWorks() {
   try {
     const response = await fetch("http://localhost:5678/api/works");
     if (!response.ok) {
-      throw new Error("Failed to fetch works");
+      throw new Error("erreur lors du fetch");
     }
     const data = await response.json();
     works = data;
@@ -32,6 +32,7 @@ async function fetchWorks() {
     console.error("Error fetching works:", error);
   }
 }
+
 
 function galeriesDisplay(filteredWorks) {
   gallery.innerHTML = filteredWorks
@@ -70,24 +71,27 @@ hrButton.addEventListener("click", () => {
   filterWorksByCategory("Hotels & restaurants");
 });
 
-modifierMod.addEventListener("click", () => {
+document.addEventListener("DOMContentLoaded", () => {
+  if (!localStorage.getItem("token")) {
+    btnmodif.style.display = "none";
+  }
+});
+
+btnmodif.addEventListener("click", () => {
   if (localStorage.getItem("token")) {
     modal.style.display = "block";
-    blackBar.style.display = "block";
   } else {
-    alert("You need to log in to access editing mode.");
+    modal.style.display = "none";
   }
 });
 
 backMod.addEventListener("click", () => {
   modal.style.display = "none";
-  blackBar.style.display = "none";
 });
 
 xMark.forEach((mark) =>
   mark.addEventListener("click", () => {
     modal.style.display = "none";
-    blackBar.style.display = "none";
   })
 );
 
@@ -142,7 +146,9 @@ submitModalForm.addEventListener("submit", async (event) => {
         Authorization: `Bearer ${localStorage.getItem("token")}`,
       },
     };
-
+    const nofile = document.getElementById("nofile");
+    const notitle = document.getElementById("notitle");
+    
     try {
       const response = await fetch(
         "http://localhost:5678/api/works",
@@ -160,7 +166,9 @@ submitModalForm.addEventListener("submit", async (event) => {
     }
   } else {
     console.error("No file selected.");
+    nofile.innerText = "No file selected.";
   }
+  
 });
 
 function galeriesDisplayModal(worksModal) {
@@ -210,13 +218,13 @@ const updateLoginState = () => {
   if (token) {
     loginBtn.style.display = "none";
     logoutBtn.style.display = "inline";
-    modal.style.display = "block"; // Show modal if logged in
-    blackBar.style.display = "block"; // Show black bar of edition mode
+    
+    editmod.style.display = "block"; // Show black bar of edition mode
   } else {
     loginBtn.style.display = "inline";
     logoutBtn.style.display = "none";
     modal.style.display = "none"; // Hide modal if not logged in
-    blackBar.style.display = "none"; // Hide black bar of edition mode
+    editmod.style.display = "none"; // Hide black bar of edition mode
   }
 };
 
@@ -231,8 +239,42 @@ logoutBtn.addEventListener("click", () => {
   localStorage.removeItem("token");
   updateLoginState();
   modal.style.display = "none"; // Hide the modal if it is open
-  blackBar.style.display = "none"; // Hide the black bar of edition mode
+  editmod.style.display = "none"; // Hide the black bar of edition mode
 });
 
 // Initialize login state on page load
 updateLoginState();
+
+
+const connected = localStorage.getItem("token") ? true : false;
+const mainBody = document.body;
+const modifierBtn = document.querySelector(".modification");
+const editModBar = document.querySelector(".edit-mod");
+
+function updateUIOnLoginStatus() {
+  if (connected) {
+    if (mainBody) mainBody.classList.add("logged-in");
+    if (loginBtn) loginBtn.style.display = "none";
+    if (logoutBtn) logoutBtn.style.display = "inline";
+    if (modifierBtn) modifierBtn.style.display = "flex";
+    if (editModBar) editModBar.style.display = "flex";
+  } else {
+    if (modal) modal.style.display = "none";
+    if (mainBody) mainBody.classList.remove("logged-in");
+    if (loginBtn) loginBtn.style.display = "inline";
+    if (logoutBtn) logoutBtn.style.display = "none";
+    if (modifierBtn) modifierBtn.style.display = "none";
+    if (editModBar) editModBar.style.display = "none";
+  }
+}
+updateUIOnLoginStatus();
+
+// Logout functionality
+if (logoutBtn) {
+  logoutBtn.addEventListener("click", function(event) {
+    event.preventDefault();
+    localStorage.removeItem("token");
+    localStorage.removeItem("userId");
+    window.location.href = "INDEX.html";
+  });
+}
