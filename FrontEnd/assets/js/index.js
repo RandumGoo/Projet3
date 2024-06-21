@@ -119,6 +119,7 @@ const imgChoose = document.querySelector(".before-selected");
 const submitModalForm = document.getElementById("submit-modal");
 
 imageModal.addEventListener("change", function (event) {
+  
   const file = event.target.files[0];
   if (file) {
     selectedImage.src = URL.createObjectURL(file);
@@ -130,7 +131,7 @@ imageModal.addEventListener("change", function (event) {
 });
 
 submitModalForm.addEventListener("submit", async (event) => {
-  event.preventDefault(); // Prevent default form submission
+  event.preventDefault(); 
   const file = imageModal.files[0];
 
   if (file) {
@@ -147,9 +148,9 @@ submitModalForm.addEventListener("submit", async (event) => {
       },
     };
     const nofile = document.getElementById("nofile");
-    const notitle = document.getElementById("notitle");
     
     try {
+      
       const response = await fetch(
         "http://localhost:5678/api/works",
         requestOptions
